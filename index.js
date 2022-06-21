@@ -21,8 +21,14 @@ app.get('/hello', (req, res) => {
 */
 
 const mensagens = [
-    "Primeira mensagem",
-    "Segunda mensagem"
+    {
+        "id" : 1,
+        "mensagem" : "Primeira mensagem"
+    },
+    {
+        "id" : 2,
+        "mensagem" : "Segunda mensagem"
+    }
 ];
 
 //- [GET] /mensagens - Retorna lista de mensagens
@@ -35,16 +41,23 @@ app.get('/mensagens', (req, res) =>{
 app.get('/mensagens/:id', (req, res) =>{
     const id = req.params.id-1;
     const mensagem = mensagens[id];
+    if(!mensagem){
+    
+        res.send('Mensagem não encontrada!')
+    
+        return;
+    }
     res.send(mensagem);
 })
 
 //- [POST] /mensagens - Cria uma nova mensagem
 app.post('/mensagens', (req, res) =>{
-    const mensagem = req.body.mensagem;
+    const mensagem = req.body;
 
+    mensagem.id = mensagens.length + 1;
     mensagens.push(mensagem);
 
-    res.send(`Nova mensagem criada: '${mensagem}'`);
+    res.send(mensagem);
 })
 
 app.put('/mensagens/:id', (req, res) =>{
