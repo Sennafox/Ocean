@@ -23,11 +23,11 @@ app.get('/hello', (req, res) => {
 const mensagens = [
     {
         "id" : 1,
-        "mensagem" : "Primeira mensagem"
+        "texto" : "Primeira mensagem"
     },
     {
         "id" : 2,
-        "mensagem" : "Segunda mensagem"
+        "texto" : "Segunda mensagem"
     }
 ];
 
@@ -51,8 +51,14 @@ app.get('/mensagens/:id', (req, res) =>{
 })
 
 //- [POST] /mensagens - Cria uma nova mensagem
-app.post('/mensagens', (req, res) =>{
+app.post('/mensagens', (req, res) => {
     const mensagem = req.body;
+
+    if(!mensagem || !mensagem.texto){
+        res.send('Mensagem inválida!');
+
+        return;
+    }
 
     mensagem.id = mensagens.length + 1;
     mensagens.push(mensagem);
@@ -61,16 +67,23 @@ app.post('/mensagens', (req, res) =>{
 })
 
 app.put('/mensagens/:id', (req, res) =>{
-
     const id = req.params.id - 1;
 
-    const mensagem = req.body.mensagem;
+    const mensagem = mensagens[id]
     
-    mensagens[id] = mensagem;
+    const novoTexto = req.body.texto;
 
-    res.send(`Mensagem ${id+1} atualizada com sucesso: '${mensagem}'`)
+    if(!novoTexto){
+        res.send('Mensagem inválida');
+        
+        return;
+    }
 
+    mensagem.texto = novoTexto;
+
+    res.send(mensagem)
 })
+
 app.delete('/mensagens/:id', (req, res) =>{
 
     const id = req.params.id - 1;
